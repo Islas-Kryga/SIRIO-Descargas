@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Descargar SIRIO</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Descarga SIRIO, la app de Sirio Global Information para digitalizar libros históricos: recorte automático, PDF con texto buscable y TIFF.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: cielo nocturno a pantalla completa; una columna centrada de 1080px; las 3 descargas son el centro de la página. */
+:root {
+  --cielo: #050b18;          /* fondo: espacio profundo */
+  --cielo-2: #0b1730;        /* superficies */
+  --borde: #1d3358;
+  --texto: #e6f0ff;
+  --tenue: #8ea6c8;
+  --sirio: #4fc3f7;          /* acento: el brillo de la estrella Sirio */
+  --sirio-fuerte: #2f8fe0;
+  --display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --cuerpo: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--cielo); color: var(--texto);
+  font: 16px/1.6 var(--cuerpo);
+  -webkit-font-smoothing: antialiased;
+}
+#estrellas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.nebulosa {
+  position: fixed; inset: -20% -10% auto -10%; height: 90vh; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(40% 50% at 70% 30%, rgba(79,195,247,.16), transparent 70%),
+    radial-gradient(35% 45% at 25% 20%, rgba(130,90,220,.14), transparent 70%),
+    radial-gradient(30% 40% at 55% 65%, rgba(220,120,70,.08), transparent 70%);
+  filter: blur(10px);
+}
+.envoltura {
+  position: relative; z-index: 1; max-width: 1080px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: var(--sirio); }
+:focus-visible { outline: 2px solid var(--sirio); outline-offset: 3px; border-radius: 6px; }
+
+/* Encabezado */
+header.barra { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 22px; }
+.marca { display: flex; align-items: center; gap: 10px; color: var(--texto); text-decoration: none; }
+.marca span { font: 500 13px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--tenue); }
+.version { font: 500 12px/1 var(--mono); color: var(--tenue); border: 1px solid var(--borde); padding: 7px 10px; border-radius: 999px; }
+
+/* Hero */
+.hero { display: grid; justify-items: center; text-align: center; gap: 18px; padding-block: 48px 40px; }
+.logo { width: 112px; height: 112px; filter: drop-shadow(0 0 28px rgba(79,195,247,.55)); }
+.logo { animation: latido 5s ease-in-out infinite; }
+@keyframes latido { 50% { filter: drop-shadow(0 0 40px rgba(79,195,247,.85)); } }
+h1 {
+  margin: 0; font: 700 clamp(48px, 11vw, 104px)/.95 var(--display); letter-spacing: .04em;
+  background: linear-gradient(180deg, #ffffff 30%, #9fdcff); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.subtitulo { margin: 0; font: 500 clamp(15px, 2.4vw, 19px)/1.3 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--sirio); }
+.lema { margin: 6px 0 0; max-width: 34em; color: var(--tenue); font-size: clamp(16px, 2.2vw, 18px); text-wrap: balance; }
+
+/* Descargas */
+.descargas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-block: 8px 12px; }
+.opcion {
+  position: relative; display: grid; gap: 14px; grid-template-rows: auto 1fr auto auto;
+  background: linear-gradient(180deg, rgba(17,34,66,.85), rgba(9,19,40,.85));
+  border: 1px solid var(--borde); border-radius: 16px; padding: 24px 22px 22px;
+  backdrop-filter: blur(4px);
+  transition: border-color .25s, transform .25s, box-shadow .25s;
+}
+.opcion:hover { border-color: #2f5f9a; transform: translateY(-2px); }
+.opcion.tuyo { border-color: var(--sirio); box-shadow: 0 0 0 1px var(--sirio), 0 0 38px rgba(79,195,247,.28); }
+.etiqueta-tuyo {
+  position: absolute; top: -11px; left: 20px; font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase;
+  background: var(--sirio); color: #03111f; padding: 6px 9px; border-radius: 999px;
+}
+.so { display: flex; align-items: center; gap: 12px; }
+.so svg { width: 34px; height: 34px; flex: none; color: var(--texto); }
+.so h2 { margin: 0; font: 600 20px/1.2 var(--cuerpo); }
+.so p { margin: 2px 0 0; font: 400 13px/1.3 var(--mono); color: var(--tenue); }
+.detalle { margin: 0; color: var(--tenue); font-size: 14.5px; }
+.boton {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font: 600 16px/1 var(--cuerpo); text-decoration: none; color: #03111f;
+  background: linear-gradient(180deg, #7fd6ff, var(--sirio) 55%, var(--sirio-fuerte));
+  border-radius: 10px; padding: 15px 18px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 6px 18px rgba(47,143,224,.3);
+  transition: filter .2s, transform .2s;
+}
+.boton:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.boton svg { width: 18px; height: 18px; }
+.archivo { margin: -4px 0 0; text-align: center; font: 400 12px/1.4 var(--mono); color: var(--tenue); overflow-wrap: anywhere; }
+.ayuda-mac { text-align: center; margin: 14px 0 0; color: var(--tenue); font-size: 14.5px; }
+.ayuda-mac button { font: inherit; color: var(--sirio); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.cual-mac {
+  margin: 12px auto 0; max-width: 640px; background: var(--cielo-2); border: 1px solid var(--borde); border-radius: 12px; padding: 16px 20px; font-size: 15px;
+}
+.cual-mac ol { margin: 6px 0 0; padding-left: 20px; display: grid; gap: 4px; }
+.incluye { text-align: center; margin: 22px 0 0; color: var(--tenue); font-size: 14.5px; }
+.incluye b { color: var(--texto); font-weight: 600; }
+
+/* Secciones */
+section.bloque { padding-block: 72px 8px; }
+.ceja { font: 500 12px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--sirio); margin: 0 0 12px; }
+h3.titulo { margin: 0 0 28px; font: 700 clamp(24px, 4vw, 34px)/1.15 var(--display); letter-spacing: .01em; text-wrap: balance; max-width: 22em; }
+
+.pasos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--borde); }
+.paso { padding: 22px 22px 6px 0; display: grid; gap: 8px; align-content: start; }
+.paso + .paso { padding-left: 22px; border-left: 1px solid var(--borde); }
+.paso .num { font: 500 13px/1 var(--mono); color: var(--sirio); }
+.paso h4 { margin: 0; font: 600 19px/1.3 var(--cuerpo); }
+.paso p { margin: 0; color: var(--tenue); font-size: 15px; }
+.dato { font: 500 13px/1.4 var(--mono); color: var(--texto); }
+
+/* Primera vez */
+.pestanas { display: inline-flex; gap: 4px; background: var(--cielo-2); border: 1px solid var(--borde); border-radius: 10px; padding: 4px; margin-bottom: 18px; }
+.pestanas button {
+  font: 600 14px/1 var(--cuerpo); color: var(--tenue); background: none; border: 0; padding: 10px 16px; border-radius: 7px; cursor: pointer;
+}
+.pestanas button[aria-selected="true"] { background: var(--borde); color: var(--texto); }
+.panel { max-width: 720px; }
+.panel ol { margin: 0; padding-left: 22px; display: grid; gap: 10px; }
+.panel li::marker { color: var(--sirio); font-family: var(--mono); }
+.nota { margin: 16px 0 0; color: var(--tenue); font-size: 14px; max-width: 46em; }
+kbd, .ui { font: 500 .88em/1 var(--mono); background: var(--cielo-2); border: 1px solid var(--borde); border-radius: 5px; padding: 2px 6px; white-space: nowrap; }
+
+/* Requisitos */
+.requisitos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.req { border: 1px solid var(--borde); border-radius: 12px; padding: 18px 20px; display: grid; gap: 6px; align-content: start; background: rgba(11,23,48,.6); }
+.req h4 { margin: 0; font: 600 16px/1.3 var(--cuerpo); }
+.req p { margin: 0; color: var(--tenue); font-size: 14.5px; }
+
+footer { margin-top: 88px; padding-block: 28px 40px; border-top: 1px solid var(--borde); display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: space-between; color: var(--tenue); font-size: 13.5px; }
+footer p { margin: 0; }
+.correo { font-family: var(--mono); color: var(--texto); user-select: all; }
+
+@media (max-width: 860px) {
+  .descargas, .requisitos { grid-template-columns: minmax(0, 1fr); }
+  .pasos { grid-template-columns: minmax(0, 1fr); }
+  .paso, .paso + .paso { padding: 20px 0 6px; border-left: 0; }
+  .paso + .paso { border-top: 1px solid var(--borde); }
+  .hero { padding-block: 28px 32px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo { animation: none; }
+  .opcion, .boton { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="estrellas" aria-hidden="true"></canvas>
+<div class="nebulosa" aria-hidden="true"></div>
+
+<div class="envoltura">
+  <header class="barra">
+    <a class="marca" href="#">
+      <svg width="28" height="28" viewBox="0 0 100 100" aria-hidden="true"><use href="#pieza"/></svg>
+      <span>Sirio Global Information</span>
+    </a>
+    <span class="version" id="version">Versión 1.0</span>
+  </header>
+
+  <main>
+    <section class="hero">
+      <svg class="logo" viewBox="0 0 100 100" role="img" aria-label="Logo de SIRIO">
+        <defs>
+          <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#3b82d8"/><stop offset="1" stop-color="#4fc3f7"/>
+          </linearGradient>
+          <symbol id="pieza" viewBox="0 0 100 100">
+            <path fill="url(#grad)" d="M22 10h14a14 14 0 0 1 28 0h14a12 12 0 0 1 12 12v18a11 11 0 0 0 0 22v16a12 12 0 0 1-12 12H64a14 14 0 0 1-28 0H22a12 12 0 0 1-12-12V22a12 12 0 0 1 12-12z"/>
+            <text x="47" y="66" text-anchor="middle" font-family="Unbounded, Arial Black, sans-serif" font-weight="700" font-size="46" fill="#fff">S</text>
+          </symbol>
+        </defs>
+        <use href="#pieza"/>
+      </svg>
+      <h1>SIRIO</h1>
+      <p class="subtitulo">Automatización de digitalización</p>
+      <p class="lema">De la foto del libro al PDF buscable. SIRIO recorta cada página, la endereza y le pone texto con OCR, en lote y sin Photoshop.</p>
+    </section>
+
+    <section aria-label="Descargas">
+      <div class="descargas">
+        <article class="opcion" data-so="windows">
+          <div class="so">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5 10 4.5v7H3zM11 4.4 21 3v8.5H11zM3 12.5h7v7l-7-1zM11 12.5h10V21l-10-1.4z"/></svg>
+            <div><h2>Windows</h2><p>10 y 11 · 64 bits</p></div>
+          </div>
+          <p class="detalle">Instalador con acceso directo en el escritorio y el menú Inicio.</p>
+          <a class="boton" href="https://github.com/Islas-Kryga/SIRIO-Descargas/releases/latest/download/SIRIO-Windows-Setup.exe" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-5-5m5 5 5-5M5 20h14"/></svg>
+            Descargar para Windows
+          </a>
+          <p class="archivo">SIRIO-Windows-Setup.exe</p>
+        </article>
+
+        <article class="opcion" data-so="mac-silicon">
+          <div class="so">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8s2 .8 3.3.8c1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9-.1 0-2.8-1-2.8-4.3zM14 5.3c.7-.9 1.2-2 1-3.3-1 .1-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.2-.6 2.9-1.3z"/></svg>
+            <div><h2>Mac Apple Silicon</h2><p>Chips M1, M2, M3, M4</p></div>
+          </div>
+          <p class="detalle">Para Macs de 2020 en adelante con chip de Apple.</p>
+          <a class="boton" href="https://github.com/Islas-Kryga/SIRIO-Descargas/releases/latest/download/SIRIO-Mac-AppleSilicon.dmg" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-5-5m5 5 5-5M5 20h14"/></svg>
+            Descargar para Mac M
+          </a>
+          <p class="archivo">SIRIO-Mac-AppleSilicon.dmg</p>
+        </article>
+
+        <article class="opcion" data-so="mac-intel">
+          <div class="so">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8s2 .8 3.3.8c1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9-.1 0-2.8-1-2.8-4.3zM14 5.3c.7-.9 1.2-2 1-3.3-1 .1-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.2-.6 2.9-1.3z"/></svg>
+            <div><h2>Mac Intel</h2><p>Procesador Intel</p></div>
+          </div>
+          <p class="detalle">Para Macs anteriores al chip de Apple.</p>
+          <a class="boton" href="https://github.com/Islas-Kryga/SIRIO-Descargas/releases/latest/download/SIRIO-Mac-Intel.dmg" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-5-5m5 5 5-5M5 20h14"/></svg>
+            Descargar para Mac Intel
+          </a>
+          <p class="archivo">SIRIO-Mac-Intel.dmg</p>
+        </article>
+      </div>
+
+      <p class="ayuda-mac">¿No sabes qué Mac tienes? <button type="button" id="btn-cual" aria-expanded="false" aria-controls="cual-mac">Revísalo en 10 segundos</button></p>
+      <div class="cual-mac" id="cual-mac" hidden>
+        <ol>
+          <li>Haz clic en el menú <span class="ui"></span> arriba a la izquierda.</li>
+          <li>Elige <span class="ui">Acerca de esta Mac</span>.</li>
+          <li>Si dice <b>Chip Apple M1, M2, M3 o M4</b>, descarga <b>Mac Apple Silicon</b>. Si dice <b>Procesador Intel</b>, descarga <b>Mac Intel</b>.</li>
+        </ol>
+      </div>
+
+      <p class="incluye"><b>Todo incluido:</b> el motor de OCR y el modelo de español ya vienen dentro. No hace falta instalar Python ni nada más.</p>
+    </section>
+
+    <section class="bloque" aria-labelledby="t-que">
+      <p class="ceja">Cómo trabaja</p>
+      <h3 class="titulo" id="t-que">Tres pasos del libro al archivo final</h3>
+      <div class="pasos">
+        <div class="paso">
+          <span class="num">01</span>
+          <h4>Recorta y endereza</h4>
+          <p>Toma las fotos de cada página sobre cartulina negra, detecta la hoja, la endereza y quita el fondo.</p>
+          <span class="dato">Ancho fijo · 21.7 cm</span>
+        </div>
+        <div class="paso">
+          <span class="num">02</span>
+          <h4>Lee el texto</h4>
+          <p>Reconoce el texto de cada página con Tesseract en español, usando el modelo de mayor precisión.</p>
+          <span class="dato">OCR · spa · modelo best</span>
+        </div>
+        <div class="paso">
+          <span class="num">03</span>
+          <h4>Entrega el libro</h4>
+          <p>Arma el PDF con texto buscable y copiable, y guarda cada página en TIFF para preservación.</p>
+          <span class="dato">PDF buscable · TIFF · 300 DPI</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="bloque" aria-labelledby="t-primera">
+      <p class="ceja">Primera vez</p>
+      <h3 class="titulo" id="t-primera">Cómo abrirla la primera vez</h3>
+      <div class="pestanas" role="tablist" aria-label="Sistema">
+        <button type="button" role="tab" id="tab-win" aria-selected="true" aria-controls="p-win">Windows</button>
+        <button type="button" role="tab" id="tab-mac" aria-selected="false" aria-controls="p-mac">Mac</button>
+      </div>
+      <div class="panel" id="p-win" role="tabpanel" aria-labelledby="tab-win">
+        <ol>
+          <li>Abre <span class="ui">SIRIO-Windows-Setup.exe</span> desde tus Descargas.</li>
+          <li>Si aparece <b>"Windows protegió su PC"</b>, haz clic en <span class="ui">Más información</span> y luego en <span class="ui">Ejecutar de todos modos</span>.</li>
+          <li>Sigue el instalador y abre SIRIO desde el ícono del escritorio.</li>
+        </ol>
+      </div>
+      <div class="panel" id="p-mac" role="tabpanel" aria-labelledby="tab-mac" hidden>
+        <ol>
+          <li>Abre el archivo <span class="ui">.dmg</span> y arrastra SIRIO a la carpeta <span class="ui">Aplicaciones</span>.</li>
+          <li>Abre SIRIO. Si la Mac dice que no puede verificar al desarrollador, cierra el aviso.</li>
+          <li>Ve a <span class="ui">Ajustes del Sistema</span> → <span class="ui">Privacidad y seguridad</span> y, abajo, haz clic en <span class="ui">Abrir de todos modos</span>.</li>
+        </ol>
+      </div>
+      <p class="nota">Este aviso solo sale la primera vez, porque la app todavía no tiene firma digital de Microsoft o Apple. Después abre directo.</p>
+    </section>
+
+    <section class="bloque" aria-labelledby="t-req">
+      <p class="ceja">Requisitos</p>
+      <h3 class="titulo" id="t-req">Qué necesita tu computadora</h3>
+      <div class="requisitos">
+        <div class="req"><h4>Sistema</h4><p>Windows 10 u 11 de 64 bits, o macOS 12 Monterey o posterior.</p></div>
+        <div class="req"><h4>Memoria</h4><p>8 GB de RAM recomendados para lotes grandes de cientos de páginas.</p></div>
+        <div class="req"><h4>Espacio</h4><p>Deja espacio libre suficiente para los TIFF: cada página a 300 DPI ocupa varios MB.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="anio">2026</span> Sirio Global Information · Digitalización de patrimonio documental</p>
+    <p>Soporte: <span class="correo">contacto@sirioglobal.mx</span></p>
+    <p>Imagen de la app derivada de “Cosmic Cliffs”, telescopio James Webb: NASA, ESA, CSA, STScI.</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  // Año actual en el pie
+  document.getElementById("anio").textContent = new Date().getFullYear();
+
+  // Detectar el sistema del visitante y resaltar su descarga
+  function detectarSistema() {
+    var ua = navigator.userAgent || "";
+    var plat = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
+    if (/win/i.test(plat) || /Windows/.test(ua)) return "windows";
+    if (/mac/i.test(plat) || /Macintosh/.test(ua)) {
+      // Pista del chip a partir de la tarjeta grafica (Chrome/Firefox la muestran; Safari no).
+      try {
+        var gl = document.createElement("canvas").getContext("webgl");
+        var ext = gl && gl.getExtension("WEBGL_debug_renderer_info");
+        var gpu = ext ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : "";
+        if (/Apple M\d/i.test(gpu)) return "mac-silicon";
+        if (/Intel|AMD|Radeon/i.test(gpu)) return "mac-intel";
+      } catch (e) {}
+      return "mac";
+    }
+    return "";
+  }
+  var so = detectarSistema();
+  var objetivo = so === "mac" ? null : document.querySelector('.opcion[data-so="' + so + '"]');
+  if (objetivo) {
+    objetivo.classList.add("tuyo");
+    var e = document.createElement("span");
+    e.className = "etiqueta-tuyo"; e.textContent = "Para tu equipo";
+    objetivo.prepend(e);
+  }
+  // "¿Qué Mac tengo?"
+  var btnCual = document.getElementById("btn-cual"), cual = document.getElementById("cual-mac");
+  function abrirCual(abrir) { cual.hidden = !abrir; btnCual.setAttribute("aria-expanded", String(abrir)); }
+  btnCual.addEventListener("click", function () { abrirCual(cual.hidden); });
+  if (so && so !== "windows") seleccionar("mac");
+  if (so === "mac") abrirCual(true);
+
+  // Pestañas Windows / Mac
+  function seleccionar(cual) {
+    var win = cual === "windows";
+    document.getElementById("tab-win").setAttribute("aria-selected", String(win));
+    document.getElementById("tab-mac").setAttribute("aria-selected", String(!win));
+    document.getElementById("p-win").hidden = !win;
+    document.getElementById("p-mac").hidden = win;
+  }
+  document.getElementById("tab-win").addEventListener("click", function () { seleccionar("windows"); });
+  document.getElementById("tab-mac").addEventListener("click", function () { seleccionar("mac"); });
+
+  // Cielo estrellado: estrellas fijas con un titileo suave
+  var cv = document.getElementById("estrellas"), cx = cv.getContext("2d");
+  var quieto = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var estrellas = [], dpr = Math.min(window.devicePixelRatio || 1, 2);
+  function crear() {
+    cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+    var n = Math.round(innerWidth * innerHeight / 3800);
+    estrellas = [];
+    for (var i = 0; i < n; i++) {
+      estrellas.push({ x: Math.random() * cv.width, y: Math.random() * cv.height,
+        r: (Math.random() < .08 ? 1.6 : Math.random() * 1.1 + .3) * dpr,
+        a: Math.random() * .6 + .3, f: Math.random() * 6.28, v: Math.random() * .02 + .005 });
+    }
+  }
+  function pintar(t) {
+    cx.clearRect(0, 0, cv.width, cv.height);
+    for (var i = 0; i < estrellas.length; i++) {
+      var s = estrellas[i];
+      var a = quieto ? s.a : s.a * (.65 + .35 * Math.sin(s.f + t * s.v * .06));
+      cx.fillStyle = "rgba(220,235,255," + a.toFixed(3) + ")";
+      cx.beginPath(); cx.arc(s.x, s.y, s.r, 0, 6.2832); cx.fill();
+    }
+  }
+  var ultimo = 0;
+  function bucle(t) { if (t - ultimo > 80) { pintar(t); ultimo = t; } requestAnimationFrame(bucle); }
+  crear(); pintar(0);
+  addEventListener("resize", function () { crear(); pintar(0); });
+  if (!quieto) requestAnimationFrame(bucle);
+})();
+</script>
+</body>
+</html>
