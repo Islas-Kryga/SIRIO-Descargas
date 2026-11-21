@@ -95,6 +95,11 @@ h1 {
 }
 .boton:hover { filter: brightness(1.08); transform: translateY(-1px); }
 .boton svg { width: 18px; height: 18px; }
+.boton.inactivo {
+  cursor: default; color: var(--tenue); background: rgba(29,51,88,.45); border: 1px dashed var(--borde); box-shadow: none;
+}
+.boton.inactivo:hover { filter: none; transform: none; }
+.requiere { display: block; margin: 8px 0 0; font: 500 13px/1.4 var(--mono); color: #ffd27a; }
 .archivo { margin: -4px 0 0; text-align: center; font: 400 12px/1.4 var(--mono); color: var(--tenue); overflow-wrap: anywhere; }
 .ayuda-mac { text-align: center; margin: 14px 0 0; color: var(--tenue); font-size: 14.5px; }
 .ayuda-mac button { font: inherit; color: var(--sirio); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
@@ -207,11 +212,8 @@ footer p { margin: 0; }
             <div><h2>Mac Apple Silicon</h2><p>Chips M1, M2, M3, M4</p></div>
           </div>
           <p class="detalle">Para Macs de 2020 en adelante con chip de Apple.</p>
-          <a class="boton" href="https://github.com/Islas-Kryga/SIRIO-Descargas/releases/latest/download/SIRIO-Mac-AppleSilicon.dmg" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-5-5m5 5 5-5M5 20h14"/></svg>
-            Descargar para Mac M
-          </a>
-          <p class="archivo">SIRIO-Mac-AppleSilicon.dmg</p>
+          <span class="boton inactivo" aria-disabled="true">Próximamente</span>
+          <p class="archivo">Estamos terminando la versión para chip M</p>
         </article>
 
         <article class="opcion" data-so="mac-intel">
@@ -219,7 +221,7 @@ footer p { margin: 0; }
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8s2 .8 3.3.8c1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9-.1 0-2.8-1-2.8-4.3zM14 5.3c.7-.9 1.2-2 1-3.3-1 .1-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.2-.6 2.9-1.3z"/></svg>
             <div><h2>Mac Intel</h2><p>Procesador Intel</p></div>
           </div>
-          <p class="detalle">Para Macs anteriores al chip de Apple.</p>
+          <p class="detalle">Para Macs anteriores al chip de Apple.<span class="requiere">Requiere macOS 15 o más nuevo</span></p>
           <a class="boton" href="https://github.com/Islas-Kryga/SIRIO-Descargas/releases/latest/download/SIRIO-Mac-Intel.dmg" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-5-5m5 5 5-5M5 20h14"/></svg>
             Descargar para Mac Intel
@@ -233,7 +235,8 @@ footer p { margin: 0; }
         <ol>
           <li>Haz clic en el menú <span class="ui"></span> arriba a la izquierda.</li>
           <li>Elige <span class="ui">Acerca de esta Mac</span>.</li>
-          <li>Si dice <b>Chip Apple M1, M2, M3 o M4</b>, descarga <b>Mac Apple Silicon</b>. Si dice <b>Procesador Intel</b>, descarga <b>Mac Intel</b>.</li>
+          <li>Si dice <b>Chip Apple M…</b> (M1, M2, M3, M4…), tienes una <b>Mac M</b>: su versión sale próximamente.</li>
+          <li>Si dice <b>Procesador Intel</b>, tienes una <b>Mac Intel</b>: descarga <b>Mac Intel</b>. En la misma ventana revisa que diga <b>macOS 15</b> (Sequoia) o un número mayor.</li>
         </ol>
       </div>
 
@@ -253,8 +256,8 @@ footer p { margin: 0; }
         <div class="paso">
           <span class="num">02</span>
           <h4>Lee el texto</h4>
-          <p>Reconoce el texto de cada página con Tesseract en español, usando el modelo de mayor precisión.</p>
-          <span class="dato">OCR · spa · modelo best</span>
+          <p>Reconoce el texto de cada página con Tesseract en español, con el modelo rápido: casi la misma precisión en mucho menos tiempo.</p>
+          <span class="dato">OCR · spa · modelo fast</span>
         </div>
         <div class="paso">
           <span class="num">03</span>
@@ -282,8 +285,9 @@ footer p { margin: 0; }
       <div class="panel" id="p-mac" role="tabpanel" aria-labelledby="tab-mac" hidden>
         <ol>
           <li>Abre el archivo <span class="ui">.dmg</span> y arrastra SIRIO a la carpeta <span class="ui">Aplicaciones</span>.</li>
-          <li>Abre SIRIO. Si la Mac dice que no puede verificar al desarrollador, cierra el aviso.</li>
-          <li>Ve a <span class="ui">Ajustes del Sistema</span> → <span class="ui">Privacidad y seguridad</span> y, abajo, haz clic en <span class="ui">Abrir de todos modos</span>.</li>
+          <li>Abre SIRIO desde <span class="ui">Aplicaciones</span>. La Mac avisará que no puede verificarla: haz clic en <span class="ui">Listo</span>.</li>
+          <li>Abre <span class="ui">Configuración del Sistema</span> → <span class="ui">Privacidad y seguridad</span>, baja hasta el final y haz clic en <span class="ui">Abrir de todos modos</span>.</li>
+          <li>Escribe la contraseña de tu Mac y confirma con <span class="ui">Abrir de todos modos</span>.</li>
         </ol>
       </div>
       <p class="nota">Este aviso solo sale la primera vez, porque la app todavía no tiene firma digital de Microsoft o Apple. Después abre directo.</p>
@@ -293,7 +297,7 @@ footer p { margin: 0; }
       <p class="ceja">Requisitos</p>
       <h3 class="titulo" id="t-req">Qué necesita tu computadora</h3>
       <div class="requisitos">
-        <div class="req"><h4>Sistema</h4><p>Windows 10 u 11 de 64 bits, o macOS 12 Monterey o posterior.</p></div>
+        <div class="req"><h4>Sistema</h4><p>Windows 10 u 11 de 64 bits, o macOS 15 Sequoia o posterior en Mac Intel.</p></div>
         <div class="req"><h4>Memoria</h4><p>8 GB de RAM recomendados para lotes grandes de cientos de páginas.</p></div>
         <div class="req"><h4>Espacio</h4><p>Deja espacio libre suficiente para los TIFF: cada página a 300 DPI ocupa varios MB.</p></div>
       </div>
